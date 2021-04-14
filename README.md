@@ -1,2 +1,4 @@
 # github-pages
-gitHub page
+
+
+![Counter](https://profile-counter.glitch.me/chikurin66/count.svg)
