@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ことれこ - プライバシーポリシー</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Helvetica, 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2em 1.5em;
+      line-height: 1.8;
+      color: #333;
+      background: #fefefe;
+    }
+    h1 { font-size: 1.5em; margin-bottom: 0.3em; }
+    h2 { font-size: 1.15em; margin-top: 1.8em; margin-bottom: 0.5em; color: #555; }
+    p, li { margin-bottom: 0.8em; }
+    ul { padding-left: 1.5em; }
+    .app-name { color: #e8937a; font-weight: bold; }
+    .updated { color: #888; font-size: 0.9em; }
+    a { color: #e8937a; }
+  </style>
+</head>
+<body>
+
+<h1>プライバシーポリシー</h1>
+<p class="updated">最終更新日: 2026-04-22</p>
+
+<p>
+  Yuto Takebayashi（以下「開発者」）は、<span class="app-name">ことれこ</span>（以下「本アプリ」）における
+  利用者のプライバシー保護を重要と考えています。本ポリシーでは、本アプリが扱う情報とその取り扱いについて説明します。
+</p>
+
+<h2>1. 本アプリの概要</h2>
+<p>
+  ことれこは、お子さまの発話（ことば）を音声・動画で記録し、成長の思い出として振り返るためのアプリです。
+  記録したデータはすべて利用者の端末内にのみ保存され、外部サーバーへの送信は一切行いません。
+</p>
+
+<h2>2. 収集する情報</h2>
+<p>
+  <strong>本アプリは、利用者の個人情報を収集・送信しません。</strong>
+</p>
+<p>
+  本アプリが端末内に保存するデータは以下のとおりです。これらはすべて端末のローカルストレージに保存され、
+  開発者を含むいかなる第三者にも送信されません。
+</p>
+<ul>
+  <li>録音した音声ファイル（m4a 形式）</li>
+  <li>撮影した動画ファイル（mp4 形式）</li>
+  <li>選択・撮影した画像ファイル</li>
+  <li>登録した単語（テキスト）</li>
+  <li>トリミング範囲などのメタデータ</li>
+</ul>
+
+<h2>3. 端末の機能へのアクセス</h2>
+<p>本アプリは以下の端末機能へのアクセスを求めます。いずれも本アプリの機能を提供するためにのみ使用します。</p>
+<ul>
+  <li><strong>マイク</strong>: お子さまの声を録音するために使用します</li>
+  <li><strong>カメラ</strong>: 動画モードで前面カメラによる撮影を行うために使用します</li>
+  <li><strong>写真ライブラリ</strong>: 単語に写真やイラストを添付するために使用します</li>
+</ul>
+
+<h2>4. 第三者への情報提供</h2>
+<p>
+  本アプリはインターネット通信を行わないため、利用者のデータが第三者に提供されることはありません。
+  広告 SDK、アクセス解析ツール、クラッシュレポートサービス等の第三者サービスは一切使用していません。
+</p>
+
+<h2>5. お子さまのプライバシーについて</h2>
+<p>
+  本アプリは、保護者がお子さまの成長記録を残す目的で設計されています。
+  お子さまが直接操作することを主な対象としたアプリではなく、保護者の管理のもとで使用されることを想定しています。
+</p>
+<p>
+  記録されたお子さまの音声・動画・画像は端末内にのみ保存され、開発者がこれらにアクセスすることはできません。
+  データの管理・削除は利用者自身が行うことができます。
+</p>
+
+<h2>6. データの削除</h2>
+<p>
+  本アプリの設定画面から、保存されたすべてのデータ（単語・録音・画像・動画）を一括で削除できます。
+  また、個別の単語やその録音も削除可能です。アプリをアンインストールすると、端末に保存されたすべてのデータが削除されます。
+</p>
+
+<h2>7. プライバシーポリシーの変更</h2>
+<p>
+  本ポリシーは予告なく変更されることがあります。変更があった場合は、本ページを更新することでお知らせします。
+  定期的にご確認いただくことをおすすめします。
+</p>
+
+<h2>8. お問い合わせ</h2>
+<p>
+  本ポリシーに関するご質問やご要望がありましたら、以下までご連絡ください。
+</p>
+<p>
+  Yuto Takebayashi<br>
+  メール: <a href="#" id="contact-email" onclick="return revealEmail(this);">[メールアドレスを表示]</a>
+</p>
+<script>
+function revealEmail(el) {
+  var u = '2010b17.take';
+  var d = 'gmail.com';
+  var addr = u + '@' + d;
+  el.href = 'mailto:' + addr;
+  el.textContent = addr;
+  el.onclick = null;
+  return true;
+}
+</script>
+
+</body>
+</html>

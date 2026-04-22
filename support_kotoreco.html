@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ことれこ - サポート</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Helvetica, 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2em 1.5em;
+      line-height: 1.8;
+      color: #333;
+      background: #fefefe;
+    }
+    h1 { font-size: 1.5em; margin-bottom: 0.3em; }
+    h2 { font-size: 1.15em; margin-top: 1.8em; margin-bottom: 0.5em; color: #555; }
+    p, li { margin-bottom: 0.8em; }
+    ul { padding-left: 1.5em; }
+    .app-name { color: #e8937a; font-weight: bold; }
+    a { color: #e8937a; }
+    .faq-q { font-weight: bold; margin-top: 1.2em; }
+    .faq-a { margin-left: 1em; }
+  </style>
+</head>
+<body>
+
+<h1>ことれこ サポート</h1>
+<p><span class="app-name">ことれこ</span> — はつごと思い出をのこそう。</p>
+
+<h2>アプリについて</h2>
+<p>
+  ことれこは、お子さまの「はじめてのことば」や成長とともに変わる発音を、
+  単語ごとに記録して振り返ることができるアプリです。
+</p>
+<ul>
+  <li>音声のみ / 動画+音声 の2モードで録音</li>
+  <li>波形を見ながら前後をトリミング</li>
+  <li>単語に写真やイラストを添付</li>
+  <li>アルバムで時系列に聴き返し</li>
+  <li>データはすべて端末内に保存（クラウド不使用）</li>
+</ul>
+
+<h2>よくある質問</h2>
+
+<p class="faq-q">Q. データは外部に送信されますか?</p>
+<p class="faq-a">
+  いいえ。録音・動画・画像・テキストなど、すべてのデータは端末内にのみ保存されます。
+  インターネット通信は一切行いません。
+</p>
+
+<p class="faq-q">Q. 機種変更時にデータを移行できますか?</p>
+<p class="faq-a">
+  現在、アプリ内でのデータ移行機能はありません。
+  iOS の場合、iTunes / Finder バックアップからの復元でデータが引き継がれる場合があります。
+  今後のアップデートでバックアップ・復元機能の追加を検討しています。
+</p>
+
+<p class="faq-q">Q. 録音できません / 「マイクへのアクセスを許可してください」と表示されます</p>
+<p class="faq-a">
+  端末の「設定」アプリ → 「ことれこ」→ マイク をオンにしてください。
+  カメラや写真ライブラリも同様に許可が必要です。
+</p>
+
+<p class="faq-q">Q. トリミングすると元の音声は消えますか?</p>
+<p class="faq-a">
+  いいえ。トリミングは非破壊方式で、元の音声ファイルはそのまま保持されます。
+  再生時にトリミング範囲だけを再生する仕組みです。
+</p>
+
+<p class="faq-q">Q. データを削除するには?</p>
+<p class="faq-a">
+  個別の単語・録音は、アルバムの3点メニューや詳細画面から削除できます。
+  すべてのデータを一括削除したい場合は、設定タブの「すべてのデータを削除」をご利用ください。
+</p>
+
+<h2>お問い合わせ</h2>
+<p>
+  不具合の報告やご要望がありましたら、以下までお気軽にご連絡ください。
+</p>
+<p>
+  Yuto Takebayashi<br>
+  メール: <a href="#" id="contact-email" onclick="return revealEmail(this);">[メールアドレスを表示]</a>
+</p>
+<script>
+function revealEmail(el) {
+  var u = '2010b17.take';
+  var d = 'gmail.com';
+  var addr = u + '@' + d;
+  el.href = 'mailto:' + addr;
+  el.textContent = addr;
+  el.onclick = null;
+  return true;
+}
+</script>
+
+<h2>関連リンク</h2>
+<ul>
+  <li><a href="privacyPolicy_kotoreco.html">プライバシーポリシー</a></li>
+</ul>
+
+</body>
+</html>
