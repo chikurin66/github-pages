@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="PULSAR">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="75%">
+      <stop offset="0%" stop-color="#141033"/>
+      <stop offset="55%" stop-color="#0a0620"/>
+      <stop offset="100%" stop-color="#04030f"/>
+    </radialGradient>
+    <radialGradient id="core" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="35%" stop-color="#8ef6ff"/>
+      <stop offset="70%" stop-color="#28c8ff"/>
+      <stop offset="100%" stop-color="#0a6cff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="beam" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ff3df0" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#ff5cf2" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#ff3df0" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="7" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+
+  <!-- pulsing rings -->
+  <g fill="none" stroke-linecap="round" filter="url(#glow)">
+    <circle cx="256" cy="230" r="70"  stroke="#39e6ff" stroke-width="5" opacity="0.9"/>
+    <circle cx="256" cy="230" r="118" stroke="#2ea6ff" stroke-width="4" opacity="0.55"/>
+    <circle cx="256" cy="230" r="166" stroke="#7a5cff" stroke-width="3" opacity="0.3"/>
+  </g>
+
+  <!-- twin neon beams -->
+  <g filter="url(#glow)">
+    <rect x="240" y="-30" width="32" height="520" rx="16" fill="url(#beam)" transform="rotate(24 256 230)"/>
+    <rect x="240" y="-30" width="32" height="520" rx="16" fill="url(#beam)" transform="rotate(-24 256 230)" opacity="0.7"/>
+  </g>
+
+  <!-- bright core -->
+  <circle cx="256" cy="230" r="46" fill="url(#core)" filter="url(#glow)"/>
+  <circle cx="256" cy="230" r="15" fill="#ffffff"/>
+
+  <!-- title -->
+  <text x="256" y="430" text-anchor="middle"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif"
+        font-size="66" font-weight="800" letter-spacing="10"
+        fill="#8ef6ff" filter="url(#glow)">PULSAR</text>
+  <text x="256" y="466" text-anchor="middle"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif"
+        font-size="20" font-weight="600" letter-spacing="7"
+        fill="#ff6cf0" opacity="0.9">NEON SURVIVAL</text>
+</svg>
