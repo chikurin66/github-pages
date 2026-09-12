@@ -6,6 +6,19 @@ const ARTBOARD = params.get("artboard") || "Artboard";
 const STATE_MACHINE = "State Machine 1";
 const BLINK_TRIGGER = "blinkNow";
 const TALK_BOOLEAN = "isTalk";
+const OPENMOJI_BASE = "https://cdn.jsdelivr.net/npm/openmoji@17.0.0/color/svg";
+
+const SPECIAL_DAILY_ITEMS = {
+  "01-01": { h: "1F38D", n: "門松" },
+  "02-03": { h: "1F479", n: "鬼" },
+  "03-03": { h: "1F38E", n: "ひな祭り" },
+  "04-01": { h: "1F338", n: "桜" },
+  "05-05": { h: "1F38F", n: "こいのぼり" },
+  "07-07": { h: "1F38B", n: "七夕" },
+  "08-01": { h: "1F386", n: "花火" },
+  "10-31": { h: "1F383", n: "ハロウィーンのかぼちゃ" },
+  "12-25": { h: "1F384", n: "クリスマスツリー" },
+};
 
 const MIN_WAIT_MS = 2200;
 const MAX_WAIT_MS = 5800;
@@ -29,18 +42,11 @@ const stageShell = document.querySelector("#stage-shell");
 const speechBubble = document.querySelector("#speech-bubble");
 const effectLayer = document.querySelector("#effect-layer");
 const callCountElement = document.querySelector("#call-count");
+const dailyItemElement = document.querySelector("#daily-item");
 
-const RESPONSE_PHRASES = [
-  "はーい！",
-  "やっほー！",
-  "なあに？",
-  "えへへ！",
-  "もういっかい！",
-  "いっしょに あそぼ！",
-];
 const SPARK_COLORS = ["#ffd65a", "#ef754c", "#78a94b", "#61aee8"];
-const RESPONSE_MIN_MS = 1050;
-const RESPONSE_MAX_MS = 1650;
+const RESPONSE_MIN_MS = 1900;
+const RESPONSE_MAX_MS = 2600;
 
 let blinkTrigger = null;
 let isTalk = null;
@@ -52,6 +58,29 @@ let responseTimer = null;
 let sparkTimer = null;
 let isTalking = false;
 let callCount = 0;
+
+function selectDailyItem(date = new Date()) {
+  const dateKey = `${String(date.getMonth() + 1).padStart(2, "0")}-${String(
+    date.getDate(),
+  ).padStart(2, "0")}`;
+  const specialItem = SPECIAL_DAILY_ITEMS[dateKey];
+  if (specialItem) return specialItem;
+
+  const items = window.PONTA_DAILY_ITEMS ?? [];
+  if (!items.length) return { h: "1F342", n: "落ち葉" };
+
+  // UTC conversion makes the same local calendar date select the same item
+  // regardless of daylight-saving or timezone offset changes.
+  const dayNumber = Math.floor(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86400000,
+  );
+  return items[Math.abs(dayNumber) % items.length];
+}
+
+const dailyItem = selectDailyItem();
+dailyItemElement.src = `${OPENMOJI_BASE}/${dailyItem.h}.svg`;
+dailyItemElement.alt = `ぽんたが頭にのせている${dailyItem.n}`;
+dailyItemElement.title = dailyItem.n;
 
 function japaneseVoice() {
   if (typeof window.speechSynthesis?.getVoices !== "function") return null;
@@ -192,7 +221,7 @@ const ponta = new rive.Rive({
       talkButton.title = "RiveのViewModel1にisTalk Booleanを作り、.rivを再出力してください";
     }
     setTalk(false);
-    status.textContent = "スペースキーを おしてね！";
+    status.textContent = "スペースキーで きいてみよう！";
     scheduleBlink();
   },
   onLoadError: () => {
@@ -244,13 +273,15 @@ function callPonta() {
   callCount += 1;
   callCountElement.textContent = String(callCount);
 
-  const randomPhrase =
-    RESPONSE_PHRASES[Math.floor(Math.random() * RESPONSE_PHRASES.length)];
-  const phrase = callCount % 5 === 0 ? "すごーい！" : randomPhrase;
+  const phrase =
+    callCount % 5 === 0
+      ? `${dailyItem.n}だよ！ すてきだね！`
+      : `${dailyItem.n}だよ！`;
   speechBubble.textContent = phrase;
   speakPhrase(phrase);
   replayClass(speechBubble, "pop");
   replayClass(stageShell, "is-responding");
+  replayClass(dailyItemElement, "bounce");
   window.setTimeout(() => stageShell.classList.remove("is-responding"), 520);
   replayClass(talkButton, "is-pressed");
   window.setTimeout(() => talkButton.classList.remove("is-pressed"), 180);
@@ -261,7 +292,7 @@ function callPonta() {
   scheduleTalking(true);
   responseTimer = window.setTimeout(() => {
     stopTalking();
-    status.textContent = "もういっかい おしてね！";
+    status.textContent = "もういっかい きいてみよう！";
   }, randomBetween(RESPONSE_MIN_MS, RESPONSE_MAX_MS));
 }
 

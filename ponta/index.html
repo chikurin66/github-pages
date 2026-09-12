@@ -3,21 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ぽんたを よんでみよう！</title>
-    <link rel="stylesheet" href="./styles.css?v=31" />
+    <title>きょうの ぽんた</title>
+    <link rel="stylesheet" href="./styles.css?v=34" />
   </head>
   <body>
     <main class="game">
       <section class="game-shell" aria-labelledby="title">
         <header class="copy">
-          <h1 id="title">ぽんたを よんでみよう！</h1>
-          <p class="description">キーを おすと、ぽんたが こえで おへんじするよ</p>
+          <h1 id="title">きょうの ぽんた</h1>
+          <p class="description">あたまに なにを のせてるかな？</p>
         </header>
 
         <div id="stage-shell" class="stage-shell">
-          <p id="speech-bubble" class="speech-bubble" aria-live="polite">こんにちは！</p>
+          <p id="speech-bubble" class="speech-bubble" aria-live="polite">なにかな？</p>
           <div class="stage-wrap">
             <canvas id="rive-canvas" width="720" height="720" aria-label="たぬきのぽんた"></canvas>
+            <img id="daily-item" class="daily-item" alt="" />
             <div id="missing-file" class="missing" hidden>
               <strong>ぽんたを読み込めませんでした</strong>
               <span>ページをもう一度開いてください。</span>
@@ -28,17 +29,22 @@
 
         <div class="game-controls">
           <button id="talk-button" class="call-button" type="button" disabled>
-            <span>ぽんたを よぶ！</span>
+            <span>これ なあに？</span>
             <kbd>スペース</kbd>
           </button>
-          <p class="hint">タップでも あそべるよ</p>
+          <p class="hint">おすと こえで おしえてくれるよ</p>
           <p id="status" class="status" role="status">ぽんたが くるよ…</p>
           <p class="count"><span id="call-count">0</span>かい よんだよ</p>
         </div>
       </section>
+      <footer class="credits">
+        Illustrations by <a href="https://openmoji.org/" rel="license">OpenMoji</a>
+        · <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="license">CC BY-SA 4.0</a>
+      </footer>
     </main>
 
     <script src="https://unpkg.com/@rive-app/webgl2@2.42.0"></script>
-    <script src="./app.js?v=32"></script>
+    <script src="./daily-items.js?v=34"></script>
+    <script src="./app.js?v=34"></script>
   </body>
 </html>
