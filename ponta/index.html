@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ぽんた — Rive preview</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <section class="preview" aria-labelledby="title">
+        <div class="copy">
+          <p class="season">ぽんたのアニメーション工房</p>
+          <h1 id="title">ぽんたの表情テスト</h1>
+          <p class="description">
+            呼吸と自然なまばたきを再生しながら、会話中の口パクを確認できます。
+          </p>
+        </div>
+
+        <div class="stage-wrap">
+          <canvas id="rive-canvas" width="720" height="720" aria-label="ぽんたのRiveアニメーション"></canvas>
+          <div id="missing-file" class="missing" hidden>
+            <strong>Riveファイルを待っています</strong>
+            <span><code>preview-rive/assets/ponta-face.riv</code>へ置いてください。</span>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button id="blink-button" type="button" disabled>いま、まばたき</button>
+          <button id="talk-button" type="button" disabled aria-pressed="false">話してみる</button>
+          <p id="status" role="status">読み込み中…</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://unpkg.com/@rive-app/webgl2@2.42.0"></script>
+    <script src="./app.js?v=29"></script>
+  </body>
+</html>
