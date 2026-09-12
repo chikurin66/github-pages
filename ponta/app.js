@@ -22,10 +22,25 @@ const TALK_PAUSE_MIN_MS = 260;
 const TALK_PAUSE_MAX_MS = 520;
 
 const canvas = document.querySelector("#rive-canvas");
-const blinkButton = document.querySelector("#blink-button");
 const talkButton = document.querySelector("#talk-button");
 const status = document.querySelector("#status");
 const missingFile = document.querySelector("#missing-file");
+const stageShell = document.querySelector("#stage-shell");
+const speechBubble = document.querySelector("#speech-bubble");
+const effectLayer = document.querySelector("#effect-layer");
+const callCountElement = document.querySelector("#call-count");
+
+const RESPONSE_PHRASES = [
+  "はーい！",
+  "やっほー！",
+  "なあに？",
+  "えへへ！",
+  "もういっかい！",
+  "いっしょに あそぼ！",
+];
+const SPARK_COLORS = ["#ffd65a", "#ef754c", "#78a94b", "#61aee8"];
+const RESPONSE_MIN_MS = 1050;
+const RESPONSE_MAX_MS = 1650;
 
 let blinkTrigger = null;
 let isTalk = null;
@@ -33,7 +48,10 @@ let boundViewModelInstance = null;
 let blinkTimer = null;
 let secondBlinkTimer = null;
 let talkTimer = null;
+let responseTimer = null;
+let sparkTimer = null;
 let isTalking = false;
+let callCount = 0;
 
 function randomWait() {
   return Math.round(MIN_WAIT_MS + Math.random() * (MAX_WAIT_MS - MIN_WAIT_MS));
@@ -70,8 +88,6 @@ function stopTalking() {
   isTalking = false;
   window.clearTimeout(talkTimer);
   setTalk(false);
-  talkButton.textContent = "話してみる";
-  talkButton.setAttribute("aria-pressed", "false");
 }
 
 function fireBlink() {
@@ -91,7 +107,6 @@ function scheduleBlink() {
   if (!blinkTrigger || document.hidden) return;
 
   const wait = randomWait();
-  status.textContent = `次のまばたきまで約${(wait / 1000).toFixed(1)}秒`;
   blinkTimer = window.setTimeout(() => {
     fireBlink();
     scheduleBlink();
@@ -139,14 +154,13 @@ const ponta = new rive.Rive({
       return;
     }
 
-    blinkButton.disabled = false;
     talkButton.disabled = !isTalk;
     if (!isTalk) {
-      talkButton.textContent = "口パク未接続";
+      talkButton.querySelector("span").textContent = "ぽんたは おやすみ中";
       talkButton.title = "RiveのViewModel1にisTalk Booleanを作り、.rivを再出力してください";
     }
     setTalk(false);
-    status.textContent = "自然なまばたきを開始しました";
+    status.textContent = "スペースキーを おしてね！";
     scheduleBlink();
   },
   onLoadError: () => {
@@ -158,29 +172,79 @@ const ponta = new rive.Rive({
 // Handy for inspecting the exported file from the browser console.
 window.pontaPreview = ponta;
 
-blinkButton.addEventListener("click", () => {
-  fireBlink();
-  scheduleBlink();
-});
+function replayClass(element, className) {
+  element.classList.remove(className);
+  void element.offsetWidth;
+  element.classList.add(className);
+}
 
-talkButton.addEventListener("click", () => {
-  if (isTalking) {
-    stopTalking();
-    status.textContent = "口パクを停止しました";
-    return;
+function createSparkBurst(isMilestone) {
+  const amount = isMilestone ? 24 : 13;
+  window.clearTimeout(sparkTimer);
+  effectLayer.replaceChildren();
+
+  for (let index = 0; index < amount; index += 1) {
+    const spark = document.createElement("span");
+    const angle = (Math.PI * 2 * index) / amount + Math.random() * 0.35;
+    const distance = randomBetween(isMilestone ? 150 : 110, isMilestone ? 260 : 205);
+    spark.className = "spark";
+    spark.textContent = index % 3 === 0 ? "★" : index % 3 === 1 ? "●" : "✦";
+    spark.style.setProperty("--spark-x", `${Math.cos(angle) * distance}px`);
+    spark.style.setProperty("--spark-y", `${Math.sin(angle) * distance}px`);
+    spark.style.setProperty("--spark-rotate", `${randomBetween(-140, 140)}deg`);
+    spark.style.setProperty("--spark-size", `${randomBetween(16, isMilestone ? 34 : 27)}px`);
+    spark.style.setProperty("--spark-delay", `${randomBetween(0, 90)}ms`);
+    spark.style.setProperty(
+      "--spark-color",
+      SPARK_COLORS[index % SPARK_COLORS.length],
+    );
+    effectLayer.append(spark);
   }
 
+  sparkTimer = window.setTimeout(() => effectLayer.replaceChildren(), 1050);
+}
+
+function callPonta() {
+  if (!isTalk) return;
+
+  window.clearTimeout(responseTimer);
+  stopTalking();
+  callCount += 1;
+  callCountElement.textContent = String(callCount);
+
+  const phrase = RESPONSE_PHRASES[Math.floor(Math.random() * RESPONSE_PHRASES.length)];
+  speechBubble.textContent = callCount % 5 === 0 ? "すごーい！" : phrase;
+  replayClass(speechBubble, "pop");
+  replayClass(stageShell, "is-responding");
+  window.setTimeout(() => stageShell.classList.remove("is-responding"), 520);
+  replayClass(talkButton, "is-pressed");
+  window.setTimeout(() => talkButton.classList.remove("is-pressed"), 180);
+  createSparkBurst(callCount % 5 === 0);
+
   isTalking = true;
-  talkButton.textContent = "話すのを止める";
-  talkButton.setAttribute("aria-pressed", "true");
-  status.textContent = "ぽんたがお話し中…";
+  status.textContent = `${callCount}かいめの おへんじ！`;
   scheduleTalking(true);
+  responseTimer = window.setTimeout(() => {
+    stopTalking();
+    status.textContent = "もういっかい おしてね！";
+  }, randomBetween(RESPONSE_MIN_MS, RESPONSE_MAX_MS));
+}
+
+talkButton.addEventListener("click", callPonta);
+
+document.addEventListener("keydown", (event) => {
+  if (event.repeat || (event.code !== "Space" && event.key !== "Enter")) return;
+  if (event.target.closest?.("button, input, select, textarea, a")) return;
+
+  event.preventDefault();
+  callPonta();
 });
 
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
     clearBlinkTimers();
     if (isTalking) stopTalking();
+    window.clearTimeout(responseTimer);
   } else {
     scheduleBlink();
   }
@@ -190,5 +254,7 @@ window.addEventListener("resize", () => ponta.resizeDrawingSurfaceToCanvas());
 window.addEventListener("beforeunload", () => {
   clearBlinkTimers();
   window.clearTimeout(talkTimer);
+  window.clearTimeout(responseTimer);
+  window.clearTimeout(sparkTimer);
   ponta.cleanup();
 });
