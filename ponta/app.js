@@ -53,6 +53,38 @@ let sparkTimer = null;
 let isTalking = false;
 let callCount = 0;
 
+function japaneseVoice() {
+  if (typeof window.speechSynthesis?.getVoices !== "function") return null;
+
+  const voices = window.speechSynthesis.getVoices();
+  const japaneseVoices = voices.filter((voice) =>
+    voice.lang.toLowerCase().startsWith("ja"),
+  );
+
+  return japaneseVoices.find((voice) => voice.localService) ?? japaneseVoices[0] ?? null;
+}
+
+function speakPhrase(phrase) {
+  if (
+    typeof window.speechSynthesis?.speak !== "function" ||
+    typeof window.SpeechSynthesisUtterance !== "function"
+  ) {
+    return;
+  }
+
+  // A new call replaces the previous reply instead of building up a queue.
+  window.speechSynthesis.cancel();
+  const utterance = new window.SpeechSynthesisUtterance(phrase);
+  utterance.lang = "ja-JP";
+  utterance.rate = 0.92;
+  utterance.pitch = 1.2;
+  utterance.volume = 1;
+
+  const voice = japaneseVoice();
+  if (voice) utterance.voice = voice;
+  window.speechSynthesis.speak(utterance);
+}
+
 function randomWait() {
   return Math.round(MIN_WAIT_MS + Math.random() * (MAX_WAIT_MS - MIN_WAIT_MS));
 }
@@ -212,8 +244,11 @@ function callPonta() {
   callCount += 1;
   callCountElement.textContent = String(callCount);
 
-  const phrase = RESPONSE_PHRASES[Math.floor(Math.random() * RESPONSE_PHRASES.length)];
-  speechBubble.textContent = callCount % 5 === 0 ? "すごーい！" : phrase;
+  const randomPhrase =
+    RESPONSE_PHRASES[Math.floor(Math.random() * RESPONSE_PHRASES.length)];
+  const phrase = callCount % 5 === 0 ? "すごーい！" : randomPhrase;
+  speechBubble.textContent = phrase;
+  speakPhrase(phrase);
   replayClass(speechBubble, "pop");
   replayClass(stageShell, "is-responding");
   window.setTimeout(() => stageShell.classList.remove("is-responding"), 520);
@@ -245,6 +280,7 @@ document.addEventListener("visibilitychange", () => {
     clearBlinkTimers();
     if (isTalking) stopTalking();
     window.clearTimeout(responseTimer);
+    window.speechSynthesis?.cancel();
   } else {
     scheduleBlink();
   }
@@ -256,5 +292,6 @@ window.addEventListener("beforeunload", () => {
   window.clearTimeout(talkTimer);
   window.clearTimeout(responseTimer);
   window.clearTimeout(sparkTimer);
+  window.speechSynthesis?.cancel();
   ponta.cleanup();
 });
