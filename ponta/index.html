@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>きょうの ぽんた</title>
-    <link rel="stylesheet" href="./styles.css?v=34" />
+    <link rel="stylesheet" href="./styles.css?v=36" />
+    <link rel="stylesheet" href="./feeding.css?v=36" />
   </head>
   <body>
     <main class="game">
@@ -18,7 +19,7 @@
           <p id="speech-bubble" class="speech-bubble" aria-live="polite">なにかな？</p>
           <div class="stage-wrap">
             <canvas id="rive-canvas" width="720" height="720" aria-label="たぬきのぽんた"></canvas>
-            <img id="daily-item" class="daily-item" alt="" />
+            <img id="daily-item" class="daily-item" alt="" role="button" tabindex="0" aria-label="頭の小物の説明を聞く" />
             <div id="missing-file" class="missing" hidden>
               <strong>ぽんたを読み込めませんでした</strong>
               <span>ページをもう一度開いてください。</span>
@@ -27,6 +28,7 @@
           <div id="effect-layer" class="effect-layer" aria-hidden="true"></div>
         </div>
 
+        <div id="food-tray" aria-label="口へ運んで食べさせる"></div>
         <div class="game-controls">
           <button id="talk-button" class="call-button" type="button" disabled>
             <span>これ なあに？</span>
@@ -47,5 +49,6 @@
     <script src="https://unpkg.com/@rive-app/webgl2@2.42.0"></script>
     <script src="./daily-items.js?v=35"></script>
     <script src="./app.js?v=35"></script>
+    <script src="./feeding.js?v=36"></script>
   </body>
 </html>

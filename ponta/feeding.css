@@ -1,0 +1,25 @@
+html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+.game { height: 100vh; height: 100dvh; min-height: 0; padding: max(8px, env(safe-area-inset-top)) 12px max(18px, env(safe-area-inset-bottom)); }
+.game-shell { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; }
+.copy, .game-controls, .speech-bubble { display: none; }
+.stage-shell { width: min(92vw, 68dvh, 500px); padding: 0; margin: 0; }
+.effect-layer { inset: 0; }
+.daily-item { pointer-events: auto; cursor: pointer; touch-action: manipulation; }
+.daily-item:focus-visible { outline: 3px solid #78a94b; border-radius: 20%; }
+.credits { position: fixed; bottom: 2px; right: 8px; margin: 0; font-size: 9px; }
+#food-tray { display: flex; justify-content: center; gap: clamp(12px, 5vw, 30px); width: 100%; }
+.food { position: relative; width: clamp(70px, 22vw, 108px); aspect-ratio: 1; padding: 0; border: 0; border-radius: 50%; background: #fffdf5; box-shadow: 0 6px 0 #dbbe80; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.food svg { width: 100%; height: 100%; display: block; pointer-events: none; }
+.food:focus-visible { outline: 4px solid #78a94b; outline-offset: 4px; }
+.food:disabled { opacity: .65; }
+.food.dragging { z-index: 20; background: transparent; box-shadow: none; cursor: grabbing; }
+.food.returning { transition: transform 280ms ease-out; }
+.stage-shell.hungry .stage-wrap { border-color: #78a94b; }
+.food.finished svg { opacity: 0; transition: opacity 150ms; }
+@media (orientation: landscape) and (max-height: 550px) {
+ .game-shell { flex-direction: row; width: 100%; max-width: 850px; }
+ .stage-shell { width: min(85dvh, 55vw); }
+ #food-tray { width: auto; flex-direction: column; gap: 10px; }
+ .food { width: min(23dvh, 85px); }
+}
+@media (prefers-reduced-motion: reduce) { .food.returning { transition: none; } }
