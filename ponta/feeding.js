@@ -2,7 +2,64 @@
 (() => {
   const tray = document.querySelector('#food-tray');
   const ns = 'http://www.w3.org/2000/svg';
-  const foods = [ ['1F34C', 'バナナ'], ['1F370', 'ケーキ'], ['1F34E', 'りんご'] ];
+  // Unique phrases per food; shared motion families keep the reactions readable.
+  const foods = [
+    ['1F34C', 'バナナ', 'soft', 'あまくて、やわらかいね！'],
+    ['1F370', 'ケーキ', 'sweet', 'ふわふわ！ あまくて、うれしいな！'],
+    ['1F34E', 'りんご', 'crunch', 'しゃく、しゃく！ いいおとだね！'],
+    ['1F353', 'いちご', 'sweet', 'いちご、あまくていいにおい！'],
+    ['1F349', 'すいか', 'juicy', 'しゃりしゃり！ おくちが、じゅわー！'],
+    ['1F34B', 'レモン', 'sour', 'わあ、すっぱーい！ おめめが、きゅっ！'],
+    ['1F34A', 'みかん', 'juicy', 'みかんのしるが、じゅわー！'],
+    ['1F351', 'もも', 'soft', 'もも、やわらかーい！ いいかおり！'],
+    ['1F350', 'なし', 'crunch', 'しゃり、しゃり！ みずみずしいね！'],
+    ['1F366', 'ソフトクリーム', 'cold', 'ひゃっ！ つめたくて、あまーい！'],
+    ['1F368', 'アイスクリーム', 'cold', 'つめたーい！ おくちで、とけちゃった！'],
+    ['1F369', 'ドーナツ', 'sweet', 'まあるいドーナツ、ぱくっ！ あまーい！'],
+    ['1F36A', 'クッキー', 'crunch', 'さくさく、ぽりぽり！ たのしいおと！'],
+    ['1F35E', 'パン', 'soft', 'ふわふわパン！ もぐもぐ、おいしい！'],
+    ['1F359', 'おにぎり', 'meal', 'おこめが、もちもち！ げんきがでるね！'],
+    ['1F355', 'ピザ', 'meal', 'チーズが、のびーる！ おいしいな！'],
+    ['1F360', 'やきいも', 'soft', 'ほくほく！ おいもって、あまいね！'],
+    ['1F33D', 'とうもろこし', 'crunch', 'つぶつぶ、ぷちぷち！ あまいね！'],
+  ];
+  const reactions = {
+    soft: ['♥', '#e99b64'], sweet: ['♥', '#ef7299'],
+    crunch: ['✦', '#d99827'], juicy: ['●', '#69bdd0'],
+    sour: ['✧', '#b2b840'], cold: ['❄', '#73bdda'], meal: ['★', '#eeb74c'],
+  };
+  let deck = [];
+  function nextFood(current) {
+    const visible = new Set(Array.from(tray.children, el => el.dataset.hex));
+    if (!deck.some(item => !visible.has(item[0]) && item[0] !== current)) {
+      deck = foods.filter(item => !visible.has(item[0]) && item[0] !== current);
+      for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+      }
+    }
+    return deck.splice(deck.findIndex(item => !visible.has(item[0]) && item[0] !== current), 1)[0];
+  }
+  function setFood(food, item) {
+    const [hex, name, reaction, phrase] = item;
+    Object.assign(food.dataset, {hex, name, reaction, phrase, bites:'0', dx:'0', dy:'0'});
+    counts.set(food, 0);
+    food.classList.remove('finished');
+    food.setAttribute('aria-label', `${name}をぽんたにあげる`);
+    food.querySelector('image').setAttribute('href', `https://cdn.jsdelivr.net/npm/openmoji@17.0.0/color/svg/${hex}.svg`);
+    food.querySelectorAll('mask circle').forEach(el => el.remove());
+  }
+  function react(food, complete) {
+    const kind = food.dataset.reaction;
+    const [symbol, color] = reactions[kind];
+    stageShell.dataset.foodReaction = kind;
+    replayClass(stageShell, 'food-reacting');
+    createSparkBurst(complete);
+    effectLayer.querySelectorAll('.spark').forEach(el => {
+      el.textContent = symbol;
+      el.style.setProperty('--spark-color', color);
+    });
+  }
   let drag = null;
   let busy = false;
   let feedingFood = null;
@@ -53,33 +110,33 @@
     later(() => {
       setTalk(false);
       const count = maskBite(food);
-      createSparkBurst(count === 3);
-      replayClass(stageShell, 'is-responding');
+      react(food, count === 3);
       status.textContent = `${food.dataset.name}を${count}くち たべたよ`;
-      speakPhrase(count === 3 ? 'ごちそうさま！ おいしかった！' : 'もぐもぐ。おいしい！');
+      speakPhrase(count === 3 ? `${food.dataset.name}、ごちそうさま！` : food.dataset.phrase);
       isTalking = true; scheduleTalking(true);
     }, 380);
     later(() => {
       stopTalking(); resetPosition(food);
-      stageShell.classList.remove('is-responding');
+      stageShell.classList.remove('is-responding', 'food-reacting');
       food.dataset.dx = '0'; food.dataset.dy = '0';
       if (counts.get(food) === 3) {
         later(() => {
-          food.querySelectorAll('mask circle').forEach(el => el.remove());
-          counts.set(food, 0); food.dataset.bites = '0'; food.classList.remove('finished');
+          setFood(food, nextFood(food.dataset.hex));
           busy = false; feedingFood = null;
         }, 300);
       } else {
         busy = false; feedingFood = null;
       }
-    }, 1900);
+    }, 3200);
   }
-  for (const [hex, name] of foods) {
+  for (const item of foods.slice(0, 3)) {
+    const [hex, name] = item;
     const food = document.createElement('button');
     food.className = 'food'; food.type = 'button'; food.disabled = true;
     food.dataset.name = name; food.dataset.bites = '0';
     food.setAttribute('aria-label', `${name}をぽんたにあげる`);
     food.innerHTML = `<svg viewBox="0 0 100 100" aria-hidden="true"><defs><mask id="bite-${hex}" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100" style="mask-type:luminance"><rect width="100" height="100" fill="white"/></mask></defs><image href="https://cdn.jsdelivr.net/npm/openmoji@17.0.0/color/svg/${hex}.svg" width="100" height="100" mask="url(#bite-${hex})"/></svg>`;
+    setFood(food, item);
     let suppressClick = false;
     food.addEventListener('pointerdown', e => {
       if (busy || drag || e.button !== 0) return;
@@ -128,11 +185,10 @@
       resetPosition(feedingFood);
       feedingFood.dataset.dx='0'; feedingFood.dataset.dy='0';
       if (counts.get(feedingFood)===3) {
-        feedingFood.querySelectorAll('mask circle').forEach(el=>el.remove());
-        counts.set(feedingFood,0); feedingFood.dataset.bites='0'; feedingFood.classList.remove('finished');
+        setFood(feedingFood, nextFood(feedingFood.dataset.hex));
       }
     }
-    busy=false; feedingFood=null; stopTalking(); stageShell.classList.remove('is-responding','hungry');
+    busy=false; feedingFood=null; stopTalking(); stageShell.classList.remove('is-responding','hungry','food-reacting');
   }
   window.addEventListener('resize', cancelPlay);
   document.addEventListener('visibilitychange', () => { if (document.hidden) cancelPlay(); });

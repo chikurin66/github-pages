@@ -23,3 +23,23 @@ html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
  .food { width: min(23dvh, 85px); }
 }
 @media (prefers-reduced-motion: reduce) { .food.returning { transition: none; } }
+
+/* Animate only the face canvas: the plate and daily head item stay easy to target. */
+.food-reacting canvas { transform-origin: 50% 65%; }
+.food-reacting[data-food-reaction="soft"] canvas { animation: food-soft 1.3s ease-in-out; }
+.food-reacting[data-food-reaction="sweet"] canvas { animation: food-sweet 1.2s ease-in-out; }
+.food-reacting[data-food-reaction="crunch"] canvas { animation: food-crunch .35s ease-in-out 3; }
+.food-reacting[data-food-reaction="juicy"] canvas { animation: food-juicy 1.3s ease-in-out; }
+.food-reacting[data-food-reaction="sour"] canvas { animation: food-sour 1.3s ease-in-out; }
+.food-reacting[data-food-reaction="cold"] canvas { animation: food-cold .16s ease-in-out 6; }
+.food-reacting[data-food-reaction="meal"] canvas { animation: food-meal .55s ease-in-out 2; }
+@keyframes food-soft { 35% { transform: rotate(-4deg); } 70% { transform: rotate(4deg); } }
+@keyframes food-sweet { 25%, 65% { transform: translateY(-4%) scale(1.03); } 45% { transform: scale(1.03,.97); } }
+@keyframes food-crunch { 50% { transform: translateY(1%) scale(1.03,.97); } }
+@keyframes food-juicy { 30% { transform: rotate(-3deg) scale(1.04); } 65% { transform: rotate(3deg) scale(1.04); } }
+@keyframes food-sour { 25% { transform: scale(.92,1.02) rotate(-5deg); } 50% { transform: scale(.92,1.02) rotate(5deg); } 75% { transform: rotate(-2deg); } }
+@keyframes food-cold { 25% { transform: translateX(-1.2%); } 75% { transform: translateX(1.2%); } }
+@keyframes food-meal { 50% { transform: translateY(2%) rotate(2deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .food-reacting canvas { animation: none !important; }
+}
